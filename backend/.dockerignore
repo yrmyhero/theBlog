@@ -1,0 +1,47 @@
+# ===== Python 缓存和编译文件 =====
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+
+# ===== 虚拟环境 =====
+venv/
+.venv/
+env/
+ENV/
+
+# ===== 包管理器和构建产物 =====
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ===== 开发工具和 IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== 版本控制 =====
+.git/
+.gitignore
+
+# ===== 环境变量和敏感数据 =====
+.env
+*.env
+*.env.local
+
+# ===== 日志和临时文件 =====
+*.log
+*.tmp
+.dockerignore   # 忽略自身，没必要发给 Docker
+Dockerfile      # 忽略 Dockerfile 本身（避免上下文包含，虽然不影响但节省空间）
+
+# ===== 测试和文档 =====
+tests/
+docs/
+*.md

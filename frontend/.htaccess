@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 如果请求的是真实存在的文件（如图片、css、js），直接返回
+  RewriteCond %{REQUEST_FILENAME} !-f
+  # 如果请求的是真实存在的目录，直接返回
+  RewriteCond %{REQUEST_FILENAME} !-d
+  # 其他所有请求都指向 index.html（SPA 回退路由）
+  RewriteRule . /index.html [L]
+</IfModule>
