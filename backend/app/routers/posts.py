@@ -123,6 +123,27 @@ async def get_post(slug: str, db: AsyncSession = Depends(get_db)):
 
 # ────────── 需认证接口 ──────────
 
+@router.get("/id/{post_id}", response_model=schemas.PostResponse)
+async def get_post_by_id(
+    post_id: int,
+    db: AsyncSession = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    """管理端：按 ID 获取文章完整内容（需登录）。"""
+    stmt = (
+        select(models.Post)
+        .where(models.Post.id == post_id)
+        .options(selectinload(models.Post.author))
+        .options(selectinload(models.Post.category))
+        .options(selectinload(models.Post.tags))
+    )
+    result = await db.execute(stmt)
+    post = result.scalar_one_or_none()
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="文章不存在")
+    return post
+
+
 @router.post("", response_model=schemas.PostResponse, status_code=status.HTTP_201_CREATED)
 async def create_post(
     data: schemas.PostCreate,
