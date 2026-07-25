@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,8 +18,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production-to-a-random-string
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 小时
 
-# ────────── OAuth2 方案（告诉 FastAPI 从请求头提取 Bearer token） ──────────
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+# ────────── Bearer Token 方案 ──────────
+security = HTTPBearer()
 
 
 def hash_password(password: str) -> str:
@@ -46,7 +46,7 @@ def decode_access_token(token: str) -> dict:
 
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db),
 ) -> models.User:
     """
@@ -56,6 +56,7 @@ async def get_current_user(
         user: User = Depends(get_current_user)
     如果 token 无效 / 过期 / 用户不存在，自动返回 401。
     """
+    token = credentials.credentials  # HTTPBearer 自动取出 "Bearer xxx" 中的 token 部分
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="无法验证凭据",

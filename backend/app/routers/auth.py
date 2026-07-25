@@ -10,6 +10,7 @@ from ..auth import (
     hash_password,
     verify_password,
     create_access_token,
+    get_current_user,
 )
 
 router = APIRouter(prefix="/api/auth", tags=["认证"])
@@ -56,3 +57,33 @@ async def login(data: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
 
     token = create_access_token(data={"sub": str(user.id), "username": user.username})
     return schemas.TokenResponse(access_token=token)
+
+
+@router.put("/change-password", status_code=status.HTTP_200_OK)
+async def change_password(
+    data: schemas.ChangePasswordRequest,
+    db: AsyncSession = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    """修改密码（需登录）。"""
+    if not verify_password(data.old_password, user.hashed_password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="旧密码错误")
+
+    user.hashed_password = hash_password(data.new_password)
+    await db.commit()
+    return {"message": "密码修改成功"}
+
+
+@router.delete("/account", status_code=status.HTTP_200_OK)
+async def delete_account(
+    data: schemas.DeleteAccountRequest,
+    db: AsyncSession = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    """注销账号（需登录，需密码确认）。"""
+    if not verify_password(data.password, user.hashed_password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="密码错误")
+
+    await db.delete(user)
+    await db.commit()
+    return {"message": "账号已注销"}

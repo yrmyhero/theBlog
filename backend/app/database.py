@@ -2,7 +2,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+asyncmy://myuser:mypassword@db:3306/mydb")
+# 本地开发默认连 localhost，Docker 内部通过环境变量覆盖为 db
+DATABASE_URL = os.getenv("DATABASE_URL", "mysql+asyncmy://myuser:mypassword@localhost:3306/mydb")
 
 engine = create_async_engine(DATABASE_URL, 
                              echo=True,
