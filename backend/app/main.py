@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import auth
+from .routers import auth, posts, categories, tags
 
 app = FastAPI(title="Blog API")
 
@@ -16,6 +16,9 @@ app.add_middleware(
 
 # ────────── 注册路由 ──────────
 app.include_router(auth.router)
+app.include_router(categories.router)
+app.include_router(tags.router)
+app.include_router(posts.router)
 
 
 @app.get("/")
