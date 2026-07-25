@@ -18,3 +18,8 @@ pydantic-settings==2.6.0
 
 # ===== 数据验证与序列化（FastAPI 自带，但显式声明防版本冲突） =====
 pydantic==2.10.3
+
+# ===== JWT 认证（用户登录、权限管理） =====
+PyJWT==2.9.0                            # JWT签发与认证
+bcrypt==5.0.0                           # 密码哈希加密
+python-multipart==0.0.20                # 解析前端提交的表单数据

@@ -14,3 +14,9 @@ engine = create_async_engine(DATABASE_URL,
 
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 Base = declarative_base()
+
+
+async def get_db():
+    """FastAPI 依赖注入：每个请求获取一个数据库 session，请求结束自动关闭。"""
+    async with AsyncSessionLocal() as session:
+        yield session
