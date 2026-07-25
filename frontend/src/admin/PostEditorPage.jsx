@@ -33,6 +33,7 @@ export default function PostEditorPage() {
 
   const imgRef = useRef(null)
   const mdRef = useRef(null)
+  const coverRef = useRef(null)
 
   const refreshCategories = () => categoriesApi.list().then((r) => setCategories(r.data))
   const refreshTags = () => tagsApi.list().then((r) => setTags(r.data))
@@ -107,6 +108,17 @@ export default function PostEditorPage() {
   const handleMdUpload = async (e) => {
     const file = e.target.files?.[0]
     if (file) { await uploadFile(file); e.target.value = '' }
+  }
+
+  const handleCoverUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    try {
+      const res = await uploadApi.image(file)
+      form.setFieldValue('cover_image', res.data.url)
+      message.success('封面上传成功')
+    } catch (err) { showErr(err, '上传失败') }
+    finally { e.target.value = '' }
   }
 
   // ── 快速创建分类 ──
@@ -276,8 +288,16 @@ export default function PostEditorPage() {
                 </Col>
               </Row>
 
-              <Form.Item name="cover_image" label={<span style={{ color: 'var(--text-secondary)' }}>封面图</span>}>
-                <Input placeholder="https://..." style={glassInput} />
+              <Form.Item label={<span style={{ color: 'var(--text-secondary)' }}>封面图</span>}>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <Form.Item name="cover_image" noStyle>
+                    <Input placeholder="粘贴 URL 或点击右侧上传" style={{ ...glassInput, flex: 1 }} />
+                  </Form.Item>
+                  <Button icon={<PictureOutlined />} onClick={() => coverRef.current?.click()}
+                    style={{ borderRadius: 6, flexShrink: 0 }}>上传</Button>
+                  <input ref={coverRef} type="file" accept="image/*" style={{ display: 'none' }}
+                    onChange={handleCoverUpload} />
+                </div>
               </Form.Item>
 
               <Button type="primary" htmlType="submit" loading={loading} size="large"

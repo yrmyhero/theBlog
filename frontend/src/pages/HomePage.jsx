@@ -32,10 +32,11 @@ export default function HomePage() {
     }
   }, [])
 
-  // 轮播数据：取置顶文章或前 3 篇
-  const carouselPosts = posts.filter((p) => p.is_top).length > 0
-    ? posts.filter((p) => p.is_top).slice(0, 5)
-    : posts.slice(0, 3)
+  // 轮播：置顶在前，按阅读量补满 10 篇
+  const carouselPosts = [
+    ...posts.filter((p) => p.is_top),
+    ...posts.filter((p) => !p.is_top).sort((a, b) => b.view_count - a.view_count),
+  ].slice(0, 10)
 
   const prev = useCallback(() => carouselRef.current?.prev(), [])
   const next = useCallback(() => carouselRef.current?.next(), [])

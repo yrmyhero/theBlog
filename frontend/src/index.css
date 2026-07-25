@@ -137,11 +137,18 @@ article th, article td { border: 1px solid var(--border-glass); padding: 10px 14
 article th { background: var(--bg-glass); font-weight: 600; }
 article blockquote {
   border-left: 3px solid var(--accent);
-  padding: 4px 16px;
+  padding: 8px 20px;
   margin: 1em 0;
   color: var(--text-secondary);
   background: var(--bg-glass);
   border-radius: 0 8px 8px 0;
+}
+article blockquote ul,
+article blockquote ol {
+  padding-left: 20px;
+}
+article blockquote li {
+  margin: 4px 0;
 }
 
 /* ═══════════════ 代码高亮主题适配 ═══════════════ */
