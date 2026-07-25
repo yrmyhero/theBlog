@@ -1,55 +1,157 @@
-/* 全局重置 — Ant Design 会处理大部分样式 */
-body {
-  margin: 0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
-    Arial, 'Noto Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* ═══════════════ CSS 变量：暗色主题（默认） ═══════════════ */
+:root,
+[data-theme='dark'] {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-glass-hover: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-hover: rgba(255, 255, 255, 0.15);
+  --text-primary: #e8e8ed;
+  --text-secondary: #8888a0;
+  --text-muted: #55556a;
+  --accent: #7c6ff7;
+  --accent-glow: rgba(124, 111, 247, 0.25);
+  --accent-2: #00cec9;
+  --danger: #ff6b6b;
+  --success: #2ed573;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --blur: blur(20px) saturate(180%);
 }
 
-#root {
+/* ═══════════════ 亮色主题 ═══════════════ */
+[data-theme='light'] {
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.65);
+  --bg-glass-hover: rgba(255, 255, 255, 0.85);
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --border-glass-hover: rgba(0, 0, 0, 0.15);
+  --text-primary: #1a1a2e;
+  --text-secondary: #555570;
+  --text-muted: #999ab0;
+  --accent: #ff6b6b;
+  --accent-glow: rgba(255, 107, 107, 0.2);
+  --accent-2: #ffa502;
+  --danger: #e74c3c;
+  --success: #27ae60;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --blur: blur(24px) saturate(150%);
+}
+
+/* ═══════════════ 全局重置 ═══════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.3s, color 0.3s;
   min-height: 100vh;
 }
 
-/* Markdown 文章内容样式 */
-article img {
-  max-width: 100%;
-  border-radius: 4px;
+#root { min-height: 100vh; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { opacity: 0.85; }
+
+/* ═══════════════ 毛玻璃工具类 ═══════════════ */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+.glass:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-glass-hover);
+}
+.glass-card {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
+}
+.glass-card:hover {
+  border-color: var(--border-glass-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.glass-nav {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-bottom: 1px solid var(--border-glass);
 }
 
+/* ═══════════════ 覆盖 antd 暗色/亮色全局 ═══════════════ */
+[data-theme='dark'] .ant-card,
+[data-theme='dark'] .ant-table,
+[data-theme='dark'] .ant-menu,
+[data-theme='dark'] .ant-modal-content,
+[data-theme='dark'] .ant-select-dropdown,
+[data-theme='dark'] .ant-dropdown-menu {
+  background: var(--bg-glass) !important;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
+[data-theme='light'] .ant-card,
+[data-theme='light'] .ant-menu,
+[data-theme='light'] .ant-modal-content {
+  background: var(--bg-glass) !important;
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+}
+
+/* ═══════════════ 文章 Markdown 内容样式 ═══════════════ */
+article h1 { font-size: 1.8em; margin: 1em 0 0.5em; }
+article h2 { font-size: 1.4em; margin: 0.8em 0 0.4em; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.3em; }
+article h3 { font-size: 1.15em; margin: 0.6em 0 0.3em; }
+article p { line-height: 1.85; margin: 0.6em 0; }
+article img { max-width: 100%; border-radius: 12px; }
 article pre {
-  background: #f6f8fa;
-  border-radius: 6px;
-  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 20px;
   overflow-x: auto;
-}
-
-article code {
-  font-family: ui-monospace, Consolas, 'Liberation Mono', monospace;
   font-size: 0.9em;
+  line-height: 1.6;
 }
-
-article table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 16px 0;
+article code { font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace; font-size: 0.88em; }
+article :not(pre) > code {
+  background: var(--bg-glass);
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--accent);
 }
-
-article th, article td {
-  border: 1px solid #e5e4e7;
-  padding: 8px 12px;
-  text-align: left;
-}
-
-article th {
-  background: #f6f8fa;
-  font-weight: 600;
-}
-
+article table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+article th, article td { border: 1px solid var(--border-glass); padding: 10px 14px; text-align: left; }
+article th { background: var(--bg-glass); font-weight: 600; }
 article blockquote {
-  border-left: 4px solid #d0d7de;
-  margin: 0;
-  padding: 0 16px;
-  color: #656d76;
+  border-left: 3px solid var(--accent);
+  padding: 4px 16px;
+  margin: 1em 0;
+  color: var(--text-secondary);
+  background: var(--bg-glass);
+  border-radius: 0 8px 8px 0;
 }
+
+/* ═══════════════ 代码高亮主题适配 ═══════════════ */
+[data-theme='light'] .hljs {
+  background: #f6f8fa !important;
+  color: #24292e !important;
+}
+
+/* ═══════════════ 滚动条美化 ═══════════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-glass-hover); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }

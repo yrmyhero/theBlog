@@ -2,8 +2,7 @@ import axios from 'axios'
 
 const client = axios.create({
   baseURL: '/api',
-  timeout: 10000,
-  headers: { 'Content-Type': 'application/json' },
+  timeout: 30000,  // 上传文件可能较慢，放宽到 30 秒
 })
 
 // 请求拦截器：自动附加 JWT token

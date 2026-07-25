@@ -46,9 +46,19 @@ class UserResponse(BaseModel):
     id: int
     username: str
     email: str
+    nickname: str = ""
+    avatar: str = ""
+    bio: str = ""
     is_active: bool
     is_superuser: bool
     created_at: datetime
+
+
+class UserProfileUpdate(BaseModel):
+    """修改个人资料——昵称、头像、简介。"""
+    nickname: Optional[str] = Field(None, max_length=64, description="昵称")
+    avatar: Optional[str] = Field(None, max_length=512, description="头像 URL")
+    bio: Optional[str] = Field(None, description="个人简介")
 
 
 class ChangePasswordRequest(BaseModel):
@@ -146,6 +156,16 @@ class PostListResponse(BaseModel):
     tags: list[TagResponse] = Field(default_factory=list)
 
 
+# ═══════════════════ 上传 ═══════════════════
+
+class ImageUploadResponse(BaseModel):
+    url: str = Field(..., description="图片访问 URL")
+
+
+class MarkdownUploadResponse(BaseModel):
+    content: str = Field(..., description="Markdown 文件内容")
+
+
 class PostResponse(BaseModel):
     """文章详情页返回的完整信息（含正文）。"""
     model_config = ConfigDict(from_attributes=True)
@@ -164,3 +184,13 @@ class PostResponse(BaseModel):
     author: UserResponse
     category: Optional[CategoryResponse] = None
     tags: list[TagResponse] = Field(default_factory=list)
+
+
+# ═══════════════════ 上传 ═══════════════════
+
+class ImageUploadResponse(BaseModel):
+    url: str = Field(..., description="图片访问 URL")
+
+
+class MarkdownUploadResponse(BaseModel):
+    content: str = Field(..., description="Markdown 文件内容")

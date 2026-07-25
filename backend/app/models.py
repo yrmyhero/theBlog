@@ -24,6 +24,9 @@ class User(Base):
     hashed_password = Column(String(256), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
     is_superuser = Column(Boolean, default=False, nullable=False)
+    nickname = Column(String(64), default="", nullable=False)
+    avatar = Column(String(512), default="", nullable=False)
+    bio = Column(Text, default="", nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     posts = relationship("Post", back_populates="author")

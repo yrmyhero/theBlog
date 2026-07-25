@@ -108,15 +108,22 @@ async def get_post(slug: str, db: AsyncSession = Depends(get_db)):
         .options(selectinload(models.Post.tags))
     )
     result = await db.execute(stmt)
-    post = result.scalar_one_or_none()
+    post = result.unique().scalar_one_or_none()
 
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="文章不存在")
 
-    # 只有已发布的才增加阅读量
+    # 用直接 SQL 更新阅读量，避免 expiring 整个 ORM 对象
     if post.is_published:
-        post.view_count += 1
+        from sqlalchemy import update as sql_update
+        await db.execute(
+            sql_update(models.Post)
+            .where(models.Post.id == post.id)
+            .values(view_count=models.Post.view_count + 1)
+        )
         await db.commit()
+        # commit 后 updated_at 和 view_count 被标记过期，重新加载
+        await db.refresh(post, ["updated_at", "view_count"])
 
     return post
 
@@ -183,9 +190,16 @@ async def create_post(
     db.add(post)
     await db.commit()
 
-    # 重新加载关联数据
-    await db.refresh(post, ["author", "category", "tags"])
-    return post
+    # 用 selectinload 重新加载关联数据（异步模式比 db.refresh 更可靠）
+    stmt = (
+        select(models.Post)
+        .where(models.Post.id == post.id)
+        .options(selectinload(models.Post.author))
+        .options(selectinload(models.Post.category))
+        .options(selectinload(models.Post.tags))
+    )
+    result = await db.execute(stmt)
+    return result.scalar_one()
 
 
 @router.put("/{post_id}", response_model=schemas.PostResponse)
@@ -203,7 +217,7 @@ async def update_post(
         .options(selectinload(models.Post.tags))
     )
     result = await db.execute(stmt)
-    post = result.scalar_one_or_none()
+    post = result.unique().scalar_one_or_none()
 
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="文章不存在")
@@ -236,8 +250,17 @@ async def update_post(
         post.tags = tag_result.scalars().all()
 
     await db.commit()
-    await db.refresh(post, ["author", "category", "tags"])
-    return post
+
+    # 重新加载关联
+    stmt = (
+        select(models.Post)
+        .where(models.Post.id == post.id)
+        .options(selectinload(models.Post.author))
+        .options(selectinload(models.Post.category))
+        .options(selectinload(models.Post.tags))
+    )
+    result = await db.execute(stmt)
+    return result.scalar_one()
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -249,7 +272,7 @@ async def delete_post(
     """删除文章（需登录，仅允许作者本人）。"""
     stmt = select(models.Post).where(models.Post.id == post_id)
     result = await db.execute(stmt)
-    post = result.scalar_one_or_none()
+    post = result.unique().scalar_one_or_none()
 
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="文章不存在")

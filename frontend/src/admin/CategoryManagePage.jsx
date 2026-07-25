@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Modal, Form, Input, message, Space } from 'antd'
+import { Table, Button, Modal, Form, Input, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { categoriesApi } from '../api/categories'
 
@@ -27,47 +27,36 @@ export default function CategoryManagePage() {
       setOpen(false)
       form.resetFields()
       fetch()
-    } catch (err) {
-      message.error(err.response?.data?.detail || '创建失败')
-    } finally {
-      setSubmitting(false)
-    }
+    } catch (err) { message.error(err.response?.data?.detail || '创建失败') }
+    finally { setSubmitting(false) }
   }
 
   return (
-    <>
-      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
-        <h2>分类管理</h2>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpen(true)}>
+    <div className="glass-card" style={{ padding: 24 }}>
+      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ color: 'var(--text-primary)', fontWeight: 600 }}>分类管理</h2>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpen(true)}
+          style={{ borderRadius: 8, background: 'var(--accent)', border: 'none', boxShadow: '0 0 16px var(--accent-glow)' }}>
           新建分类
         </Button>
       </div>
 
-      <Table
-        rowKey="id"
-        loading={loading}
-        dataSource={categories}
-        pagination={false}
+      <Table rowKey="id" loading={loading} dataSource={categories} pagination={false}
+        locale={{ emptyText: '暂无分类' }}
         columns={[
-          { title: 'ID', dataIndex: 'id', width: 60 },
           { title: '名称', dataIndex: 'name' },
           { title: 'Slug', dataIndex: 'slug' },
           { title: '描述', dataIndex: 'description', ellipsis: true },
           { title: '文章数', dataIndex: 'post_count', width: 80 },
-          {
-            title: '创建时间', dataIndex: 'created_at', width: 120,
-            render: (v) => v ? new Date(v).toLocaleDateString() : '-',
+          { title: '创建时间', dataIndex: 'created_at', width: 110,
+            render: (v) => v ? new Date(v).toLocaleDateString('zh-CN') : '-',
           },
         ]}
       />
 
-      <Modal
-        title="新建分类"
-        open={open}
-        onCancel={() => setOpen(false)}
-        onOk={() => form.submit()}
-        confirmLoading={submitting}
-      >
+      <Modal title="新建分类" open={open} onCancel={() => setOpen(false)}
+        onOk={() => form.submit()} confirmLoading={submitting}
+        styles={{ content: { background: 'var(--bg-secondary)', borderRadius: 16 } }}>
         <Form form={form} layout="vertical" onFinish={handleCreate}>
           <Form.Item name="name" label="名称" rules={[{ required: true }]}>
             <Input placeholder="如：Python" />
@@ -80,6 +69,6 @@ export default function CategoryManagePage() {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   )
 }

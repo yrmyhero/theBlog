@@ -1,57 +1,66 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom'
-import { Layout as AntLayout, Menu, Button, Space, theme } from 'antd'
-import { HomeOutlined, AppstoreOutlined, LoginOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons'
+import { Button, Space } from 'antd'
+import { HomeOutlined, AppstoreOutlined, LoginOutlined, EditOutlined, LogoutOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons'
 import { useAuth } from '../contexts/AuthContext'
-
-const { Header, Content, Footer } = AntLayout
+import { useTheme } from '../contexts/ThemeContext'
 
 export default function Layout() {
   const { user, logout } = useAuth()
+  const { dark, toggle } = useTheme()
   const navigate = useNavigate()
-  const { token: themeToken } = theme.useToken()
 
   return (
-    <AntLayout style={{ minHeight: '100vh' }}>
-      <Header style={{
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* 极简导航 */}
+      <header className="glass-nav" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        background: themeToken.colorBgContainer, borderBottom: `1px solid ${themeToken.colorBorderSecondary}`,
-        padding: '0 24px', position: 'sticky', top: 0, zIndex: 100,
+        padding: '0 28px', height: 56, position: 'sticky', top: 0, zIndex: 100,
       }}>
-        <Menu
-          mode="horizontal"
-          selectable={false}
-          items={[
-            { key: 'home', icon: <HomeOutlined />, label: <Link to="/">首页</Link> },
-            { key: 'categories', icon: <AppstoreOutlined />, label: <Link to="/categories">分类</Link> },
-          ]}
-          style={{ flex: 1, border: 'none' }}
-        />
+        <Space size={0}>
+          <Link to="/" style={{
+            fontSize: 17, fontWeight: 700, color: 'var(--text-primary)',
+            letterSpacing: -0.5, marginRight: 24,
+          }}>
+            {user?.username ? `${user.username}'s Blog` : 'MyBlog'}
+          </Link>
+          <Link to="/"><Button type="text" size="small" icon={<HomeOutlined />}
+            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>首页</Button></Link>
+          <Link to="/categories"><Button type="text" size="small" icon={<AppstoreOutlined />}
+            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>分类</Button></Link>
+        </Space>
+
         <Space>
+          <Button type="text" size="small"
+            icon={dark ? <SunOutlined /> : <MoonOutlined />}
+            onClick={toggle} style={{ color: 'var(--text-secondary)' }} />
           {user ? (
             <>
-              <span style={{ color: '#666' }}>{user.username}</span>
-              <Button icon={<EditOutlined />} onClick={() => navigate('/admin/posts')}>
-                管理
-              </Button>
-              <Button icon={<LogoutOutlined />} onClick={() => { logout(); navigate('/') }}>
-                退出
-              </Button>
+              <Button type="text" size="small" icon={<EditOutlined />}
+                onClick={() => navigate('/admin/posts')}
+                style={{ color: 'var(--accent)', borderRadius: 8 }}>写文章</Button>
+              <Button type="text" size="small" icon={<LogoutOutlined />}
+                onClick={() => { logout(); navigate('/') }}
+                style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>退出</Button>
             </>
           ) : (
-            <Button type="primary" icon={<LoginOutlined />} onClick={() => navigate('/login')}>
-              登录
-            </Button>
+            <Button type="link" icon={<LoginOutlined />} onClick={() => navigate('/login')}
+              style={{ color: 'var(--accent)' }}>登录</Button>
           )}
         </Space>
-      </Header>
+      </header>
 
-      <Content style={{ padding: '24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      {/* 主内容区 */}
+      <main style={{ flex: 1, padding: '40px 24px', maxWidth: 1100, margin: '0 auto', width: '100%' }}>
         <Outlet />
-      </Content>
+      </main>
 
-      <Footer style={{ textAlign: 'center', color: '#999' }}>
-        My Blog ©{new Date().getFullYear()} Powered by React + FastAPI
-      </Footer>
-    </AntLayout>
+      {/* 极简页脚 */}
+      <footer style={{
+        textAlign: 'center', padding: 32, color: 'var(--text-muted)', fontSize: 12,
+        borderTop: '1px solid var(--border-glass)',
+      }}>
+        © {new Date().getFullYear()} &nbsp;·&nbsp; Powered by React + FastAPI
+      </footer>
+    </div>
   )
 }

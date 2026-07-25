@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ConfigProvider, App as AntApp } from 'antd'
+import { ConfigProvider, App as AntApp, theme } from 'antd'
 import zhCN from 'antd/locale/zh_CN'
 import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import Layout from './components/Layout'
 
 // 公开页面
@@ -10,6 +11,7 @@ import PostPage from './pages/PostPage'
 import LoginPage from './pages/LoginPage'
 import CategoriesPage from './pages/CategoriesPage'
 import CategoryPage from './pages/CategoryPage'
+import ProfilePage from './pages/ProfilePage'
 
 // 管理后台
 import AdminLayout from './admin/AdminLayout'
@@ -17,10 +19,44 @@ import PostListPage from './admin/PostListPage'
 import PostEditorPage from './admin/PostEditorPage'
 import CategoryManagePage from './admin/CategoryManagePage'
 
+function AntdProvider({ children }) {
+  const { dark } = useTheme()
+
+  return (
+    <ConfigProvider
+      locale={zhCN}
+      theme={{
+        algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        token: dark ? {
+          colorPrimary: '#7c6ff7',
+          colorBgContainer: 'rgba(255,255,255,0.04)',
+          colorBgElevated: 'rgba(20,20,30,0.95)',
+          colorBorder: 'rgba(255,255,255,0.08)',
+          colorBorderSecondary: 'rgba(255,255,255,0.06)',
+          colorText: '#e8e8ed',
+          colorTextSecondary: '#8888a0',
+          borderRadius: 12,
+        } : {
+          colorPrimary: '#ff6b6b',
+          colorBgContainer: 'rgba(255,255,255,0.65)',
+          colorBgElevated: 'rgba(255,255,255,0.95)',
+          colorBorder: 'rgba(0,0,0,0.08)',
+          colorBorderSecondary: 'rgba(0,0,0,0.05)',
+          colorText: '#1a1a2e',
+          colorTextSecondary: '#555570',
+          borderRadius: 12,
+        },
+      }}
+    >
+      <AntApp>{children}</AntApp>
+    </ConfigProvider>
+  )
+}
+
 export default function App() {
   return (
-    <ConfigProvider locale={zhCN} theme={{ token: { borderRadius: 6 } }}>
-      <AntApp>
+    <ThemeProvider>
+      <AntdProvider>
         <AuthProvider>
           <BrowserRouter>
             <Routes>
@@ -31,6 +67,7 @@ export default function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/category/:slug" element={<CategoryPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
               </Route>
 
               {/* 管理后台 */}
@@ -43,7 +80,7 @@ export default function App() {
             </Routes>
           </BrowserRouter>
         </AuthProvider>
-      </AntApp>
-    </ConfigProvider>
+      </AntdProvider>
+    </ThemeProvider>
   )
 }
