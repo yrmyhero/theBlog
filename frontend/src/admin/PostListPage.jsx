@@ -12,7 +12,7 @@ export default function PostListPage() {
 
   const fetchPosts = (page = 1, pageSize = 10) => {
     setLoading(true)
-    postsApi.list({ page, page_size: pageSize })
+    postsApi.listAdmin({ page, page_size: pageSize })
       .then((res) => {
         setPosts(res.data.items)
         setPagination((p) => ({ ...p, current: page, total: res.data.total }))

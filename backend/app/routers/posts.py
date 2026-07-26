@@ -102,7 +102,7 @@ async def get_post(slug: str, db: AsyncSession = Depends(get_db)):
     """公开：文章详情，自动增加阅读量。"""
     stmt = (
         select(models.Post)
-        .where(models.Post.slug == slug)
+        .where(models.Post.slug == slug, models.Post.is_published == True)
         .options(selectinload(models.Post.author))
         .options(selectinload(models.Post.category))
         .options(selectinload(models.Post.tags))
@@ -114,16 +114,15 @@ async def get_post(slug: str, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="文章不存在")
 
     # 用直接 SQL 更新阅读量，避免 expiring 整个 ORM 对象
-    if post.is_published:
-        from sqlalchemy import update as sql_update
-        await db.execute(
-            sql_update(models.Post)
-            .where(models.Post.id == post.id)
-            .values(view_count=models.Post.view_count + 1)
-        )
-        await db.commit()
-        # commit 后 updated_at 和 view_count 被标记过期，重新加载
-        await db.refresh(post, ["updated_at", "view_count"])
+    from sqlalchemy import update as sql_update
+    await db.execute(
+        sql_update(models.Post)
+        .where(models.Post.id == post.id)
+        .values(view_count=models.Post.view_count + 1)
+    )
+    await db.commit()
+    # commit 后 updated_at 和 view_count 被标记过期，重新加载
+    await db.refresh(post, ["updated_at", "view_count"])
 
     return post
 
@@ -149,6 +148,39 @@ async def get_post_by_id(
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="文章不存在")
     return post
+
+
+@router.get("/admin/all", response_model=schemas.PaginatedResponse[schemas.PostListResponse])
+async def list_posts_admin(
+    page: int = Query(1, ge=1, description="页码"),
+    page_size: int = Query(10, ge=1, le=50, description="每页数量"),
+    db: AsyncSession = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    """管理端：文章列表（含草稿，需登录）。"""
+    base = select(models.Post)
+
+    count_stmt = select(func.count()).select_from(base.subquery())
+    total = (await db.execute(count_stmt)).scalar() or 0
+
+    stmt = (
+        base
+        .options(selectinload(models.Post.author))
+        .options(selectinload(models.Post.category))
+        .options(selectinload(models.Post.tags))
+        .order_by(models.Post.is_top.desc(), models.Post.created_at.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
+    result = await db.execute(stmt)
+    posts = result.scalars().unique().all()
+
+    return schemas.PaginatedResponse(
+        total=total,
+        page=page,
+        page_size=page_size,
+        items=[schemas.PostListResponse.model_validate(p) for p in posts],
+    )
 
 
 @router.post("", response_model=schemas.PostResponse, status_code=status.HTTP_201_CREATED)

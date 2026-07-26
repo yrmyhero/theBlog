@@ -151,6 +151,7 @@ class PostListResponse(BaseModel):
     slug: str
     summary: str
     cover_image: str
+    is_published: bool
     is_top: bool
     view_count: int
     created_at: datetime

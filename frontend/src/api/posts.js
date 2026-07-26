@@ -2,6 +2,7 @@ import client from './client'
 
 export const postsApi = {
   list: (params) => client.get('/posts', { params }),
+  listAdmin: (params) => client.get('/posts/admin/all', { params }),
   getBySlug: (slug) => client.get(`/posts/${slug}`),
   getById: (id) => client.get(`/posts/id/${id}`),
   create: (data) => client.post('/posts', data),
