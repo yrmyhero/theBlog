@@ -7,10 +7,10 @@ services:
     container_name: my_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root123        # 建议通过 .env 文件管理，这里先硬写测试
-      MYSQL_DATABASE: mydb
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -23,26 +23,32 @@ services:
 
   # ---------- 2. FastAPI 后端 ----------
   backend:
-    build: ./backend                # 指向后端文件夹
+    image: ${DOCKER_USER:-blog}/backend
+    build: ./backend
     container_name: fastapi_app
     restart: always
     environment:
-      DATABASE_URL: mysql+asyncmy://myuser:mypassword@db:3306/mydb
+      DATABASE_URL: mysql+asyncmy://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}
+      SECRET_KEY: ${SECRET_KEY}
     ports:
       - "8000:8000"
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       db:
         condition: service_healthy
 
   # ---------- 3. React 前端 (Apache) ----------
   frontend:
-    build: ./frontend               # 指向前端文件夹
+    image: ${DOCKER_USER:-blog}/frontend
+    build: ./frontend
     container_name: react_app
     restart: always
     ports:
-      - "3000:80"                   # 访问 localhost:3000 即可
+      - "3000:80"
     depends_on:
       - backend
 
 volumes:
   mysql_data:
+  uploads_data:
