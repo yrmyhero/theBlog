@@ -100,11 +100,15 @@ a:hover { opacity: 0.85; }
 [data-theme='dark'] .ant-table,
 [data-theme='dark'] .ant-menu,
 [data-theme='dark'] .ant-modal-content,
-[data-theme='dark'] .ant-select-dropdown,
 [data-theme='dark'] .ant-dropdown-menu {
   background: var(--bg-glass) !important;
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
+}
+/* 下拉选择器用实色背景，避免透明看到底部元素 */
+[data-theme='dark'] .ant-select-dropdown {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-glass) !important;
 }
 [data-theme='light'] .ant-card,
 [data-theme='light'] .ant-menu,
@@ -112,6 +116,10 @@ a:hover { opacity: 0.85; }
   background: var(--bg-glass) !important;
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
+}
+[data-theme='light'] .ant-select-dropdown {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-glass) !important;
 }
 
 /* ═══════════════ 文章 Markdown 内容样式 ═══════════════ */
