@@ -49,16 +49,20 @@ class UserResponse(BaseModel):
     nickname: str = ""
     avatar: str = ""
     bio: str = ""
+    github: str = ""
+    website: str = ""
     is_active: bool
     is_superuser: bool
     created_at: datetime
 
 
 class UserProfileUpdate(BaseModel):
-    """修改个人资料——昵称、头像、简介。"""
+    """修改个人资料——昵称、头像、简介、链接。"""
     nickname: Optional[str] = Field(None, max_length=64, description="昵称")
     avatar: Optional[str] = Field(None, max_length=512, description="头像 URL")
     bio: Optional[str] = Field(None, description="个人简介")
+    github: Optional[str] = Field(None, max_length=256, description="GitHub 主页")
+    website: Optional[str] = Field(None, max_length=256, description="个人网站")
 
 
 class ChangePasswordRequest(BaseModel):

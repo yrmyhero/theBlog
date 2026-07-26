@@ -27,6 +27,8 @@ class User(Base):
     nickname = Column(String(64), default="", nullable=False)
     avatar = Column(String(512), default="", nullable=False)
     bio = Column(Text, default="", nullable=False)
+    github = Column(String(256), default="", nullable=False)
+    website = Column(String(256), default="", nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     posts = relationship("Post", back_populates="author")

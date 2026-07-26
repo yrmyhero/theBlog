@@ -1,20 +1,22 @@
 /* ═══════════════ CSS 变量：暗色主题（默认） ═══════════════ */
 :root,
 [data-theme='dark'] {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #111118;
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --bg-glass-hover: rgba(255, 255, 255, 0.08);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --border-glass-hover: rgba(255, 255, 255, 0.15);
-  --text-primary: #e8e8ed;
-  --text-secondary: #8888a0;
-  --text-muted: #55556a;
+  --bg-primary: #14141e;
+  --bg-secondary: #1a1a28;
+  --bg-glass: rgba(255, 255, 255, 0.05);
+  --bg-glass-hover: rgba(255, 255, 255, 0.10);
+  --border-glass: rgba(255, 255, 255, 0.10);
+  --border-glass-hover: rgba(255, 255, 255, 0.18);
+  --text-primary: #e4e4ee;
+  --text-secondary: #9090a8;
+  --text-muted: #606078;
   --accent: #7c6ff7;
   --accent-glow: rgba(124, 111, 247, 0.25);
   --accent-2: #00cec9;
   --danger: #ff6b6b;
   --success: #2ed573;
+  --md-accent: var(--accent);            /* 文章强调色，默认跟随主题色 */
+  --md-accent-glow: var(--accent-glow);
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --blur: blur(20px) saturate(180%);
 }
@@ -35,6 +37,8 @@
   --accent-2: #ffa502;
   --danger: #e74c3c;
   --success: #27ae60;
+  --md-accent: var(--accent);
+  --md-accent-glow: var(--accent-glow);
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   --blur: blur(24px) saturate(150%);
 }
@@ -130,13 +134,14 @@ article :not(pre) > code {
   background: var(--bg-glass);
   padding: 2px 8px;
   border-radius: 6px;
-  color: var(--accent);
+  color: var(--md-accent);
 }
+article a { color: var(--md-accent); }
 article table { width: 100%; border-collapse: collapse; margin: 1em 0; }
 article th, article td { border: 1px solid var(--border-glass); padding: 10px 14px; text-align: left; }
 article th { background: var(--bg-glass); font-weight: 600; }
 article blockquote {
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--md-accent);
   padding: 8px 20px;
   margin: 1em 0;
   color: var(--text-secondary);

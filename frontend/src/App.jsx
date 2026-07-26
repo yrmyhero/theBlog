@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage'
 import CategoriesPage from './pages/CategoriesPage'
 import CategoryPage from './pages/CategoryPage'
 import ProfilePage from './pages/ProfilePage'
+import AboutPage from './pages/AboutPage'
 
 // 管理后台
 import AdminLayout from './admin/AdminLayout'
@@ -20,7 +21,7 @@ import PostEditorPage from './admin/PostEditorPage'
 import CategoryManagePage from './admin/CategoryManagePage'
 
 function AntdProvider({ children }) {
-  const { dark } = useTheme()
+  const { dark, accentColor } = useTheme()
 
   return (
     <ConfigProvider
@@ -28,16 +29,16 @@ function AntdProvider({ children }) {
       theme={{
         algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: dark ? {
-          colorPrimary: '#7c6ff7',
-          colorBgContainer: 'rgba(255,255,255,0.04)',
-          colorBgElevated: 'rgba(20,20,30,0.95)',
-          colorBorder: 'rgba(255,255,255,0.08)',
-          colorBorderSecondary: 'rgba(255,255,255,0.06)',
-          colorText: '#e8e8ed',
-          colorTextSecondary: '#8888a0',
+          colorPrimary: accentColor,
+          colorBgContainer: 'rgba(255,255,255,0.05)',
+          colorBgElevated: 'rgba(30,30,44,0.97)',
+          colorBorder: 'rgba(255,255,255,0.10)',
+          colorBorderSecondary: 'rgba(255,255,255,0.08)',
+          colorText: '#e4e4ee',
+          colorTextSecondary: '#9090a8',
           borderRadius: 12,
         } : {
-          colorPrimary: '#ff6b6b',
+          colorPrimary: accentColor,
           colorBgContainer: 'rgba(255,255,255,0.65)',
           colorBgElevated: 'rgba(255,255,255,0.95)',
           colorBorder: 'rgba(0,0,0,0.08)',
@@ -68,6 +69,7 @@ export default function App() {
                 <Route path="/categories" element={<CategoriesPage />} />
                 <Route path="/category/:slug" element={<CategoryPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/about" element={<AboutPage />} />
               </Route>
 
               {/* 管理后台 */}

@@ -5,10 +5,12 @@ import { EyeOutlined, ClockCircleOutlined, LeftOutlined, RightOutlined } from '@
 import { postsApi } from '../api/posts'
 import { categoriesApi } from '../api/categories'
 import { usersApi } from '../api/users'
+import { useAuth } from '../contexts/AuthContext'
 
 const carouselRef = { current: null }
 
 export default function HomePage() {
+  const { user } = useAuth()
   const [posts, setPosts] = useState([])
   const [categories, setCategories] = useState([])
   const [total, setTotal] = useState(0)
@@ -24,13 +26,15 @@ export default function HomePage() {
     categoriesApi.list().then((res) => setCategories(res.data))
   }, [page])
 
-  // 加载博主信息（取第一个用户的 profile，如果没有 token 也可以用缓存）
+  // 加载博主信息 — 始终加载（登录/未登录都能看到）
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      usersApi.getMe().then((res) => setProfile(res.data)).catch(() => {})
+    if (user) {
+      usersApi.getByUsername(user.username).then((res) => setProfile(res.data)).catch(() => {})
+    } else {
+      // 未登录时通过公开接口获取博主资料
+      usersApi.getOwner().then((res) => setProfile(res.data)).catch(() => {})
     }
-  }, [])
+  }, [user?.username])
 
   // 轮播：置顶在前，按阅读量补满 10 篇
   const carouselPosts = [
@@ -141,7 +145,7 @@ export default function HomePage() {
             }}>
               {profile?.bio || '还没有个人简介，去个人设置里写一段吧 ✨'}
             </p>
-            {profile && (
+            {user && profile && user.username === profile.username && (
               <Link to="/profile" style={{
                 fontSize: 12, color: 'var(--accent)', padding: '5px 16px',
                 borderRadius: 20, border: '1px solid var(--accent-glow)',

@@ -1,8 +1,9 @@
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { Button, Space } from 'antd'
-import { HomeOutlined, AppstoreOutlined, LoginOutlined, EditOutlined, LogoutOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons'
+import { HomeOutlined, AppstoreOutlined, UserOutlined, LoginOutlined, EditOutlined, LogoutOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons'
 import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
+import ThemeSettings from './ThemeSettings'
 
 export default function Layout() {
   const { user, logout } = useAuth()
@@ -11,7 +12,6 @@ export default function Layout() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* 极简导航 */}
       <header className="glass-nav" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 28px', height: 56, position: 'sticky', top: 0, zIndex: 100,
@@ -27,9 +27,12 @@ export default function Layout() {
             style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>首页</Button></Link>
           <Link to="/categories"><Button type="text" size="small" icon={<AppstoreOutlined />}
             style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>分类</Button></Link>
+          <Link to="/about"><Button type="text" size="small" icon={<UserOutlined />}
+            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>关于</Button></Link>
         </Space>
 
         <Space>
+          <ThemeSettings />
           <Button type="text" size="small"
             icon={dark ? <SunOutlined /> : <MoonOutlined />}
             onClick={toggle} style={{ color: 'var(--text-secondary)' }} />

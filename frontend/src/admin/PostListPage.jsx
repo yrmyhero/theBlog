@@ -58,7 +58,7 @@ export default function PostListPage() {
                 style={{ color: 'var(--accent)', cursor: 'pointer' }}>{text}</a>
             ),
           },
-          { title: '分类', dataIndex: ['category', 'name'], width: 100,
+          { title: '分类', dataIndex: ['category', 'name'], width: 120,
             render: (v) => v ? <span style={{ padding: '2px 10px', borderRadius: 20, fontSize: 11, background: 'var(--accent-glow)', color: 'var(--accent)' }}>{v}</span> : '-',
           },
           { title: '发布', dataIndex: 'is_published', width: 70,
