@@ -29,3 +29,4 @@ backend/.venv/
 *.sw?
 blog-images.tar
 mysql.tar
+blog-imagesV1.tar
