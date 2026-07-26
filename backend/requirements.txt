@@ -23,3 +23,5 @@ pydantic==2.10.3
 PyJWT==2.9.0                            # JWT签发与认证
 bcrypt==5.0.0                           # 密码哈希加密
 python-multipart==0.0.20                # 解析前端提交的表单数据
+
+cryptography>=41.0.0                    # MySQL sha256 认证支持

@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -6,7 +7,15 @@ from fastapi.staticfiles import StaticFiles
 
 from .routers import auth, posts, categories, tags, upload, users
 
-app = FastAPI(title="Blog API")
+# 生产环境关闭 Swagger 文档
+is_production = os.getenv("PRODUCTION", "").lower() in ("1", "true", "yes")
+
+app = FastAPI(
+    title="Blog API",
+    docs_url=None if is_production else "/docs",
+    redoc_url=None if is_production else "/redoc",
+    openapi_url=None if is_production else "/openapi.json",
+)
 
 # 允许前端跨域请求（React 开发/生产都需要）
 app.add_middleware(

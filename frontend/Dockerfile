@@ -1,9 +1,9 @@
 # 构建
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
-COPY package.json package-lock.json
-RUN npm ci && npm cache clean --force
+COPY package.json package-lock.json ./
+RUN npm install && npm cache clean --force
 
 COPY . .
 
