@@ -44,7 +44,7 @@ export default function CategoryPage() {
                 </div>
               </div>
               {post.cover_image && (
-                <img src={post.cover_image} alt="" style={{
+                <img src={post.cover_image} alt="" className="post-cover-img" style={{
                   width: 160, height: 100, objectFit: 'cover', borderRadius: 10, flexShrink: 0,
                 }} />
               )}

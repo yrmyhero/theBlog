@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 200px)' }}>
-      <div className="glass-card" style={{ width: 400, padding: 40 }}>
+      <div className="glass-card" style={{ maxWidth: 400, width: '100%', padding: 40 }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{ fontSize: 40, marginBottom: 8 }}>◈</div>
           <h2 style={{ color: 'var(--text-primary)', fontWeight: 600, marginBottom: 4 }}>欢迎回来</h2>

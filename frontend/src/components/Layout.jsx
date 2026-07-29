@@ -12,7 +12,7 @@ export default function Layout() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header className="glass-nav" style={{
+      <header className="glass-nav header-bar" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 28px', height: 56, position: 'sticky', top: 0, zIndex: 100,
       }}>
@@ -24,11 +24,11 @@ export default function Layout() {
             {user?.username ? `${user.username}'s Blog` : 'MyBlog'}
           </Link>
           <Link to="/"><Button type="text" size="small" icon={<HomeOutlined />}
-            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>首页</Button></Link>
+            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}><span className="nav-text">首页</span></Button></Link>
           <Link to="/categories"><Button type="text" size="small" icon={<AppstoreOutlined />}
-            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>分类</Button></Link>
+            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}><span className="nav-text">分类</span></Button></Link>
           <Link to="/about"><Button type="text" size="small" icon={<UserOutlined />}
-            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>关于</Button></Link>
+            style={{ color: 'var(--text-secondary)', borderRadius: 8 }}><span className="nav-text">关于</span></Button></Link>
         </Space>
 
         <Space>
@@ -40,10 +40,10 @@ export default function Layout() {
             <>
               <Button type="text" size="small" icon={<EditOutlined />}
                 onClick={() => navigate('/admin/posts')}
-                style={{ color: 'var(--accent)', borderRadius: 8 }}>写文章</Button>
+                style={{ color: 'var(--accent)', borderRadius: 8 }}><span className="nav-text">写文章</span></Button>
               <Button type="text" size="small" icon={<LogoutOutlined />}
                 onClick={() => { logout(); navigate('/') }}
-                style={{ color: 'var(--text-secondary)', borderRadius: 8 }}>退出</Button>
+                style={{ color: 'var(--text-secondary)', borderRadius: 8 }}><span className="nav-text">退出</span></Button>
             </>
           ) : (
             <Button type="link" icon={<LoginOutlined />} onClick={() => navigate('/login')}

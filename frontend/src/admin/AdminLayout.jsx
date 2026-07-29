@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation, Navigate } from 'react-router-dom'
 import { Layout, Button } from 'antd'
 import { EditOutlined, AppstoreOutlined, ArrowLeftOutlined, MenuFoldOutlined, MenuUnfoldOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons'
@@ -13,6 +13,16 @@ export default function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
+
+  // 移动端自动折叠侧边栏
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setCollapsed(true)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   if (loading) return null
   if (!user) return <Navigate to="/login" replace />
@@ -75,11 +85,11 @@ export default function AdminLayout() {
           <Button type="text" icon={dark ? <SunOutlined /> : <MoonOutlined />}
             onClick={toggle} style={{ color: 'var(--text-secondary)' }} />
           <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => navigate('/')}
-            style={{ color: 'var(--text-secondary)' }}>前台</Button>
+            style={{ color: 'var(--text-secondary)' }}><span className="nav-text">前台</span></Button>
           <Button type="text" onClick={() => { logout(); navigate('/') }}
-            style={{ color: 'var(--text-secondary)' }}>退出</Button>
+            style={{ color: 'var(--text-secondary)' }}><span className="nav-text">退出</span></Button>
         </Header>
-        <Content style={{ padding: 24 }}>
+        <Content className="admin-content" style={{ padding: 24 }}>
           <Outlet />
         </Content>
       </Layout>

@@ -47,7 +47,7 @@ export default function PostPage() {
 
         {/* 元信息 */}
         <div style={{
-          display: 'flex', justifyContent: 'center', gap: 20,
+          display: 'flex', justifyContent: 'center', gap: 20, flexWrap: 'wrap',
           color: 'var(--text-muted)', fontSize: 13,
         }}>
           <span><UserOutlined /> {post.author?.username}</span>
@@ -67,7 +67,7 @@ export default function PostPage() {
 
       {/* 标签 */}
       {post.tags?.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 32 }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
           {post.tags.map((t) => (
             <span key={t.id} style={{
               padding: '4px 14px', borderRadius: 20, fontSize: 12,

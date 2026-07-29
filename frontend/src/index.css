@@ -170,6 +170,49 @@ article blockquote li {
   color: #24292e !important;
 }
 
+/* ═══════════════ 移动端适配 ═══════════════ */
+@media (max-width: 768px) {
+  .glass-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* 移动端减轻毛玻璃性能压力 */
+  .glass,
+  .glass-card,
+  .glass-nav {
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+  }
+
+  /* 导航栏：减小内边距，隐藏文字只留图标 */
+  .header-bar { padding: 0 12px !important; }
+  .nav-text { display: none; }
+
+  /* 主内容区减小内边距 */
+  main { padding: 20px 12px !important; }
+
+  /* 轮播图高度缩小 */
+  .carousel-slide { height: 200px !important; }
+  .carousel-overlay { padding: 20px 20px 16px !important; }
+
+  /* 文章卡片封面图缩小 */
+  .post-cover-img { width: 100px !important; height: 70px !important; }
+
+  /* 首页侧边栏在移动端折叠 */
+  .sidebar-mobile { display: none; }
+
+  /* 管理后台内容区减小内边距 */
+  .admin-content { padding: 12px !important; }
+
+  /* 文章 markdown 内容适配 */
+  article h1 { font-size: 1.4em; }
+  article h2 { font-size: 1.15em; }
+  article pre { padding: 14px; font-size: 0.82em; overflow-x: auto; }
+  article table { font-size: 0.85em; }
+  article th, article td { padding: 6px 8px; }
+}
+
 /* ═══════════════ 滚动条美化 ═══════════════ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

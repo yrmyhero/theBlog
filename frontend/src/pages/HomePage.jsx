@@ -54,7 +54,7 @@ export default function HomePage() {
             {carouselPosts.map((post) => (
               <div key={post.id}>
                 <Link to={`/post/${post.slug}`}>
-                  <div style={{
+                  <div className="carousel-slide" style={{
                     position: 'relative', height: 340, borderRadius: 16, overflow: 'hidden',
                     background: post.cover_image
                       ? `url(${post.cover_image}) center/cover`
@@ -66,7 +66,7 @@ export default function HomePage() {
                       background: 'linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.7) 100%)',
                     }} />
                     {/* 文字 */}
-                    <div style={{
+                    <div className="carousel-overlay" style={{
                       position: 'absolute', bottom: 0, left: 0, right: 0, padding: '40px 36px 28px',
                     }}>
                       {post.category && (
@@ -120,7 +120,7 @@ export default function HomePage() {
       {/* ====== 内容区：左（资料卡+分类）+ 右（文章列表）====== */}
       <Row gutter={36}>
         {/* 左侧栏 */}
-        <Col xs={24} lg={8}>
+        <Col xs={24} lg={8} className="sidebar-mobile">
           {/* 博主资料卡 */}
           <div style={{
             padding: 28, borderRadius: 14, border: '1px solid var(--border-glass)',
@@ -222,7 +222,7 @@ export default function HomePage() {
                     </div>
                     {post.cover_image && (
                       <Link to={`/post/${post.slug}`}>
-                        <img src={post.cover_image} alt="" style={{
+                        <img src={post.cover_image} alt="" className="post-cover-img" style={{
                           width: 180, height: 120, objectFit: 'cover', borderRadius: 10, flexShrink: 0,
                         }} />
                       </Link>
