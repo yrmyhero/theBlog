@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "github-slugger": "^2.0.0",
     "rehype-highlight": "^7.0.2"
   }
 }

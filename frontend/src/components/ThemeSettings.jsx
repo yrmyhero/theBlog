@@ -22,7 +22,7 @@ export default function ThemeSettings() {
 
       <Drawer title="主题设置" open={open} onClose={() => setOpen(false)}
         styles={{ body: { background: 'var(--bg-primary)' }, header: { background: 'var(--bg-primary)' } }}
-        width={320}>
+        size={320}>
 
         {/* 预设主题 */}
         <div style={{ marginBottom: 24 }}>

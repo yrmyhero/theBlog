@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column, BigInteger, String, Text, Boolean, DateTime,
     ForeignKey, Table, func
 )
+from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -63,7 +64,7 @@ class Post(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     title = Column(String(256), nullable=False)
     slug = Column(String(256), unique=True, nullable=False, index=True)
-    content = Column(Text, nullable=False)
+    content = Column(LONGTEXT, nullable=False)
     summary = Column(String(512), default="")
     cover_image = Column(String(512), default="")
     is_published = Column(Boolean, default=False, nullable=False)
