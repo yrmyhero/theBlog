@@ -15,12 +15,9 @@ FROM httpd:alpine
 # 将静态文件复制到Apache的默认网站目录
 COPY --from=builder /app/dist /usr/local/apache2/htdocs/
 
-# 修改Apache配置，启用.htaccess支持(用于路由回退)
-# 替换htdocs目录的AllowOverride 为All
-RUN sed -i '/<Directory "\/usr\/local\/apache2\/htdocs">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/g' /usr/local/apache2/conf/httpd.conf
-
-# 将.htaccess复制到网站根目录
-COPY .htaccess /usr/local/apache2/htdocs
+# 启用 SPA 路由回退：加载 mod_rewrite 并将规则直接写入 Apache 主配置
+RUN sed -i 's|#LoadModule rewrite_module modules/mod_rewrite.so|LoadModule rewrite_module modules/mod_rewrite.so|' /usr/local/apache2/conf/httpd.conf && \
+    printf '<Directory "/usr/local/apache2/htdocs">\nOptions Indexes FollowSymLinks\nAllowOverride None\nRequire all granted\n\nRewriteEngine On\nRewriteBase /\nRewriteCond %%{REQUEST_FILENAME} !-f\nRewriteCond %%{REQUEST_FILENAME} !-d\nRewriteRule . /index.html [L]\n</Directory>\n' >> /usr/local/apache2/conf/httpd.conf
 
 EXPOSE 80
 
